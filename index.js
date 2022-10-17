@@ -18,6 +18,9 @@ const server = new ApolloServer({
   },
 });
 
+// npm run dev
+// follow the appolo link
+
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });
