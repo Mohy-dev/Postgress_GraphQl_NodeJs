@@ -12,8 +12,8 @@ const {
   createReservation,
   createAccessToken,
   findPassCodeId,
-  getLastRecordReservation,
   getRecordReservationDb,
+  getLastRecordReservation,
 } = require('./concerns/dbFunctions.js');
 
 exports.Mutation = {
@@ -82,7 +82,7 @@ exports.Mutation = {
       if (!accessToken) {
         throw new Error('Access token entry not created, check inputs');
       }
-      return await reservation;
+      return reservation;
     }
   },
   updateReservation: async (parent, { input }, { prisma }) => {
@@ -163,6 +163,8 @@ exports.Mutation = {
       if (!accessToken) {
         throw new Error('Access token entry not created, check inputs');
       }
+
+      return reservation;
     }
   },
   cancelReservation: async (parent, { input }, { prisma }) => {
@@ -196,5 +198,7 @@ exports.Mutation = {
     if (!updateCancelStatus) {
       throw new Error('Reservation not cancelled yet');
     }
+
+    return 'Reservation cancelled';
   },
 };
