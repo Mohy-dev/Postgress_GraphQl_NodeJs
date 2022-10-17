@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Unit {
+  id          Int           @id @default(autoincrement())
+  unitName    String        @unique
+  createdAt   DateTime      @default(now())
+  reservation Reservation[]
+  lock        Lock[]
+
+  @@map("units")
+}
+
+model Reservation {
+  id          Int          @id @default(autoincrement())
+  guest_name  String
+  check_in    DateTime
+  check_out   DateTime
+  is_canceled Boolean       @default(false)
+  unitId      Int
+  unit        Unit         @relation(fields: [unitId], references: [id])
+  acess_token Access_code[]
+
+  @@map("reservations")
+}
+
+model Lock {
+  id             Int          @id @default(autoincrement())
+  remote_lock_id String       @unique
+  unitId         Int
+  unit           Unit         @relation(fields: [unitId], references: [id])
+  access_code     Access_code[]
+
+  @@map("lock")
+}
+
+model Access_code {
+  id                 Int         @id @default(autoincrement())
+  passcode           String
+  remote_passcode_id String
+  Lock               Lock        @relation(fields: [lockId], references: [id])
+  lockId             Int
+  Reservation        Reservation @relation(fields: [reservationId], references: [id])
+  reservationId      Int
+
+  @@map("acess_code")
+}
